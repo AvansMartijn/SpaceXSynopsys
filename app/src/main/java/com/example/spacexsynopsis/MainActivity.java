@@ -6,9 +6,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, BlankFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener {
     private Launch curLaunch;
 
     @Override
@@ -25,18 +24,13 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     @Override
     public void onItemSelected(Launch launch) {
-        BlankFragment fragment = BlankFragment.newInstance(launch.name);
+        LaunchDetailFragment fragment = LaunchDetailFragment.newInstance(launch.name);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
         ft.addToBackStack(null);
         ft.replace(R.id.mainOverviewFragment, fragment, "blank_fragment").commit();
-//        this.curLaunch = launch;
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        LaunchDetailFragment launchDetailFragment = new LaunchDetailFragment();
-//        ft.replace(R.id.mainOverviewFragment,launchDetailFragment);
-//        ft.addToBackStack("add");
-//        ft.commit();
+
 
     }
 
