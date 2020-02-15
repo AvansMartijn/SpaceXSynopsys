@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener {
-    private Launch curLaunch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +29,6 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
         ft.addToBackStack(null);
         ft.replace(R.id.mainOverviewFragment, fragment, "blank_fragment").commit();
-
-
     }
 
     @Override
@@ -39,7 +36,4 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     }
 
-    public Launch getCurLaunch(){
-        return curLaunch;
-    }
 }

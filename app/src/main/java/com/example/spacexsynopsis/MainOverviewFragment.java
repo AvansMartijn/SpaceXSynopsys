@@ -45,7 +45,6 @@ public class MainOverviewFragment extends Fragment {
             public void onClick(final View view) {
                 int itemPosition = recyclerView.getChildLayoutPosition(view);
                 Launch launch = launchAdapter.getItem(itemPosition);
-//                Toast.makeText(getActivity(), pokemon.name, Toast.LENGTH_LONG).show();
                 onItemSelectListener.onItemSelected(launch);
 
             }
