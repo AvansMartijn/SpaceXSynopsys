@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         BlankFragment fragment = BlankFragment.newInstance(launch.name);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
-//        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
         ft.addToBackStack(null);
         ft.replace(R.id.mainOverviewFragment, fragment, "blank_fragment").commit();
 //        this.curLaunch = launch;
