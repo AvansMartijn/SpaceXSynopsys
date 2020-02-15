@@ -12,11 +12,24 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainOverviewFragment extends Fragment {
     private OnItemSelectListener onItemSelectListener;
+    private ArrayList<Launch> launchList;
+    private LaunchAdapter launchAdapter;
 
     public interface OnItemSelectListener {
         void onItemSelected(Launch launch);
@@ -31,14 +44,7 @@ public class MainOverviewFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
-        List<Launch> list = new ArrayList<>();
-
-        list.add(new Launch("NAAM"));
-        list.add(new Launch("NAAM2"));
-        list.add(new Launch("NAAM3"));
-
-
-        final LaunchAdapter launchAdapter = new LaunchAdapter(list);
+        launchAdapter = new LaunchAdapter(launchList);
 
         View.OnClickListener mMessageClickedHandler = new View.OnClickListener() {
             @Override
@@ -71,5 +77,14 @@ public class MainOverviewFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnArticleSelectedListener");
         }
+        launchList = new ArrayList<>();
+    }
+
+    public void addToList(Launch launch) {
+        launchList.add(launch);
+    }
+
+    public LaunchAdapter getLaunchAdapter() {
+        return launchAdapter;
     }
 }

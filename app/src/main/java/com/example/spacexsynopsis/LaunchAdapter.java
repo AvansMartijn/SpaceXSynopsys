@@ -33,7 +33,8 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.LaunchView
     @Override
     public void onBindViewHolder(LaunchViewHolder holder, int position)
     {
-        holder.textView.setText(launches.get(position).name);
+        holder.missionNameTextView.setText(launches.get(position).name);
+        holder.missionDateTextView.setText(launches.get(position).date);
         holder.imageView.setImageResource(launches.get(position).picture);
     }
 
@@ -56,14 +57,16 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.LaunchView
     class LaunchViewHolder extends RecyclerView.ViewHolder
     {
         ImageView imageView;
-        TextView textView;
+        TextView missionNameTextView;
+        TextView missionDateTextView;
 
         LaunchViewHolder(View view)
         {
             super(view);
 
             imageView = view.findViewById(R.id.image_view_mission_patch);
-            textView = view.findViewById(R.id.text_view_title);
+            missionNameTextView = view.findViewById(R.id.text_view_mission_name);
+            missionDateTextView = view.findViewById(R.id.text_view_mission_date);
             itemView.setTag(this);
         }
 

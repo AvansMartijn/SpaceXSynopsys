@@ -4,8 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener {
 
@@ -15,9 +25,56 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         setContentView(R.layout.activity_main);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainOverviewFragment, new MainOverviewFragment());
+        final MainOverviewFragment mainOverviewFragment = new MainOverviewFragment();
+        ft.replace(R.id.mainOverviewFragment, mainOverviewFragment, "main_overview_fragment");
+
         ft.addToBackStack("add");
         ft.commit();
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+        String url = "https://api.spacexdata.com/v3/launches/upcoming";
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        for(int i=0; i<response.length(); i++) {
+                            Launch launch = new Launch("Leeg", "Datumleeg");
+                            try {
+                                JSONObject launchObject = response.getJSONObject(i);
+                                launch = new Launch(
+                                        launchObject.getString("mission_name"),
+                                            launchObject.getString("launch_date_utc")
+                                            .substring(0, 19)
+                                            .replace("T", " ")
+                                            + " UTC");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            mainOverviewFragment.addToList(launch);
+                        }
+                        mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
+
+        progressDialog.dismiss();
+
     }
 
 
