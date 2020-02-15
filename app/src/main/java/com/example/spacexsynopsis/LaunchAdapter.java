@@ -35,7 +35,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.LaunchView
     {
         holder.missionNameTextView.setText(launches.get(position).name);
         holder.missionDateTextView.setText(launches.get(position).date);
-        holder.imageView.setImageResource(launches.get(position).picture);
+        holder.missionPatchImageView.setImageBitmap(launches.get(position).missionPatch);
     }
 
 
@@ -56,7 +56,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.LaunchView
 
     class LaunchViewHolder extends RecyclerView.ViewHolder
     {
-        ImageView imageView;
+        ImageView missionPatchImageView;
         TextView missionNameTextView;
         TextView missionDateTextView;
 
@@ -64,7 +64,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.LaunchView
         {
             super(view);
 
-            imageView = view.findViewById(R.id.image_view_mission_patch);
+            missionPatchImageView = view.findViewById(R.id.image_view_mission_patch);
             missionNameTextView = view.findViewById(R.id.text_view_mission_name);
             missionDateTextView = view.findViewById(R.id.text_view_mission_date);
             itemView.setTag(this);
