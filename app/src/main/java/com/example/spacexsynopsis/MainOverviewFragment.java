@@ -29,6 +29,7 @@ public class MainOverviewFragment extends Fragment {
 
         final RecyclerView recyclerView = view.findViewById(R.id.main_overview_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setHasFixedSize(true);
 
         List<Launch> list = new ArrayList<>();
 

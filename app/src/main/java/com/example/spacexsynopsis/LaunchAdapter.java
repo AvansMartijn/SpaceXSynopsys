@@ -37,6 +37,8 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.LaunchView
         holder.imageView.setImageResource(launches.get(position).picture);
     }
 
+
+
     @Override
     public int getItemCount()
     {
@@ -60,8 +62,8 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.LaunchView
         {
             super(view);
 
-            imageView = view.findViewById(R.id.imageView);
-            textView = view.findViewById(R.id.textView);
+            imageView = view.findViewById(R.id.image_view_mission_patch);
+            textView = view.findViewById(R.id.text_view_title);
             itemView.setTag(this);
         }
 
