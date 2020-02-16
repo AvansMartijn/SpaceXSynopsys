@@ -22,6 +22,10 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener {
     private MainOverviewFragment mainOverviewFragment;
+//    private ArrayList<Launch> upcomingLaunches;
+//    private ArrayList<Launch> pastLaunches;
+//    private ArrayList<Launch> favoriteLaunches;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         ft.addToBackStack("add");
         ft.commit();
 
+        //TODO: fix loader
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
         progressDialog.show();
