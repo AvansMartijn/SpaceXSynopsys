@@ -80,8 +80,12 @@ public class MainOverviewFragment extends Fragment {
         launchList = new ArrayList<>();
     }
 
-    public void addToList(Launch launch) {
+    public void addToLaunchList(Launch launch) {
         launchList.add(launch);
+    }
+
+    public void clearLaunchList() {
+        launchList.clear();
     }
 
     public LaunchAdapter getLaunchAdapter() {

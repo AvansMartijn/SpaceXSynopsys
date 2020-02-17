@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
             ft.commit();
         }
 
-        retrieveLaunches();
+        retrieveLaunches("UPCOMING");
 
     }
 
@@ -90,11 +90,24 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         }
     }
 
-    public void retrieveLaunches(){
-        //TODO: fix loader
+    public void retrieveLaunches(String launch){
+
+        String launchTime = "";
+
+        switch (launch){
+            case "PAST":
+                launchTime = "past";
+                break;
+            default:
+                launchTime = "upcoming";
+
+        }
+
+        String url = "https://api.spacexdata.com/v3/launches/" + launchTime;
+
+        mainOverviewFragment.clearLaunchList();
 
         progressBar.setVisibility(View.VISIBLE);
-        String url = "https://api.spacexdata.com/v3/launches/past";
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -117,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            mainOverviewFragment.addToList(launch);
+                            mainOverviewFragment.addToLaunchList(launch);
                         }
                         mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
                         progressBar.setVisibility(View.GONE);
