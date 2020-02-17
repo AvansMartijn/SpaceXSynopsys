@@ -34,18 +34,17 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        mainOverviewFragment = new MainOverviewFragment();
 
         //orientation portrait
         if(findViewById(R.id.activtiy_main_portrait) != null){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            mainOverviewFragment = new MainOverviewFragment();
             ft.replace(R.id.mainOverviewFragment, mainOverviewFragment, "main_overview_fragment");
             ft.commit();
         }
 
         if(findViewById(R.id.activity_main_landscape) != null){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            mainOverviewFragment = new MainOverviewFragment();
             launchDetailFragment = new LaunchDetailFragment();
             ft.replace(R.id.mainOverviewFragment, mainOverviewFragment, "main_overview_fragment");
             ft.replace(R.id.launchDetailFragment, launchDetailFragment, "launch_detail_fragment");
