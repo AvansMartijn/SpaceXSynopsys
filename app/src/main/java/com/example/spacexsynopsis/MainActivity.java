@@ -1,6 +1,12 @@
 package com.example.spacexsynopsis;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -8,6 +14,8 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -17,15 +25,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
     private MainOverviewFragment mainOverviewFragment;
     private LaunchDetailFragment launchDetailFragment;
     private ProgressBar progressBar;
+    private DrawerLayout drawer;
+    private String mLaunchType;
 
 
 
@@ -33,7 +44,24 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawer = findViewById(R.id.activity_drawer);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+
+
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
+
         mainOverviewFragment = new MainOverviewFragment();
 
         //orientation portrait
@@ -51,8 +79,48 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
             ft.commit();
         }
 
-        retrieveLaunches("UPCOMING");
+        navigationView.setCheckedItem(R.id.nav_upcoming);
+        if(savedInstanceState != null){
+            mLaunchType = savedInstanceState.getString("launchType");
+        }else{
+            mLaunchType = "UPCOMING";
+        }
 
+        retrieveLaunches(mLaunchType);
+
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawer(GravityCompat.START);
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.nav_upcoming:
+                mLaunchType = "UPCOMING";
+                retrieveLaunches(mLaunchType);
+                break;
+            case R.id.nav_past:
+                mLaunchType = "PAST";
+                retrieveLaunches(mLaunchType);
+                break;
+            case R.id.nav_fav:
+
+                break;
+            case R.id.nav_settings:
+
+                break;
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     public void downloadImage(final Launch launch, String url)
@@ -92,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     public void retrieveLaunches(String launch){
 
-        String launchTime = "";
+        String launchTime =  "";
 
         switch (launch){
             case "PAST":
@@ -104,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         }
 
         String url = "https://api.spacexdata.com/v3/launches/" + launchTime;
-
         mainOverviewFragment.clearLaunchList();
 
         progressBar.setVisibility(View.VISIBLE);
@@ -148,6 +215,18 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
 
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mLaunchType = savedInstanceState.getString("launchType");
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("launchType", mLaunchType);
     }
 
     @Override
