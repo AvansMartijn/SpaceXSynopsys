@@ -90,20 +90,20 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         }
     }
 
-    public void retrieveLaunches(String launch){
+    private void retrieveLaunches(String launch){
 
-        String launchTime = "";
+//        String launchTime = "";
 
-        switch (launch){
-            case "PAST":
-                launchTime = "past";
-                break;
-            default:
-                launchTime = "upcoming";
+//        switch (launch){
+//            case "PAST":
+//                launchTime = "past";
+//                break;
+//            default:
+//                launchTime = "upcoming";
+//
+//        }
 
-        }
-
-        String url = "https://api.spacexdata.com/v3/launches/" + launchTime;
+        String url = "https://api.spacexdata.com/v3/launches/past";
 
         mainOverviewFragment.clearLaunchList();
 
@@ -116,20 +116,8 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                     public void onResponse(JSONArray response) {
                         //Read Reverse order for Past Items
                         for(int i = 0; i< response.length(); i++) {
-                            Launch launch = new Launch("Leeg", "Datumleeg");
-                            try {
-                                JSONObject launchObject = response.getJSONObject(i);
-                                String missionName = launchObject.getString("mission_name");
-                                String launchDateUTC = launchObject.getString("launch_date_utc")
-                                        .substring(0, 19)
-                                        .replace("T", " ")
-                                        + " UTC";
+                            Launch launch = parseLaunch(response, i);
 
-                                launch = new Launch(missionName, launchDateUTC);
-                                downloadImage(launch, launchObject.getJSONObject("links").getString("mission_patch_small"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
                             mainOverviewFragment.addToLaunchList(launch);
                         }
                         mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
@@ -153,6 +141,36 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    private Launch parseLaunch(JSONArray response, int i) {
+
+        Launch launch = new Launch();
+        JSONObject launchObject;
+        try {
+            launchObject = response.getJSONObject(i);
+            launch.setName(launchObject.getString("mission_name"));
+            launch.setDate(launchObject.getString("launch_date_utc")
+                    .substring(0, 19)
+                    .replace("T", " ")
+                    + " UTC");
+
+            launch.setLaunchSiteName(launchObject.getJSONObject("launch_site").getString("site_name_long"));
+            launch.setLaunchDetails(launchObject.getString("details"));
+
+            JSONObject rocket = launchObject.getJSONObject("rocket");
+            launch.setRocketName(rocket.getString("rocket_name"));
+
+
+            JSONArray payloads = rocket.getJSONObject("second_stage").getJSONArray("payloads");
+
+            downloadImage(launch, launchObject.getJSONObject("links").getString("mission_patch_small"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return launch;
     }
 
 }
