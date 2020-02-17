@@ -8,7 +8,9 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -23,6 +25,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener {
     private MainOverviewFragment mainOverviewFragment;
     private LaunchDetailFragment launchDetailFragment;
+    private ProgressBar progressBar;
 
 
 
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         //orientation portrait
         if(findViewById(R.id.activtiy_main_portrait) != null){
@@ -89,10 +93,8 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     public void retrieveLaunches(){
         //TODO: fix loader
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
 
+        progressBar.setVisibility(View.VISIBLE);
         String url = "https://api.spacexdata.com/v3/launches/past";
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                             mainOverviewFragment.addToList(launch);
                         }
                         mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
+                        progressBar.setVisibility(View.GONE);
 
                     }
                 }, new Response.ErrorListener() {
@@ -133,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
 
-        progressDialog.dismiss();
     }
 
     @Override
