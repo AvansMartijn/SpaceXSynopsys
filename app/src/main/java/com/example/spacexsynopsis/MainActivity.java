@@ -23,9 +23,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener {
     private MainOverviewFragment mainOverviewFragment;
     private LaunchDetailFragment launchDetailFragment;
-//    private ArrayList<Launch> upcomingLaunches;
-//    private ArrayList<Launch> pastLaunches;
-//    private ArrayList<Launch> favoriteLaunches;
+
 
 
     @Override
