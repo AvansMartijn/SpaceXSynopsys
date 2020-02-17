@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                     @Override
                     public void onResponse(JSONArray response) {
                         //Read Reverse order for Past Items
-                        for(int i = response.length()-1; i>=0; i--) {
+                        for(int i = 0; i< response.length(); i++) {
                             Launch launch = new Launch("Leeg", "Datumleeg");
                             try {
                                 JSONObject launchObject = response.getJSONObject(i);

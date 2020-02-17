@@ -85,7 +85,9 @@ public class MainOverviewFragment extends Fragment {
     }
 
     public void clearLaunchList() {
-        launchList.clear();
+        if(launchList != null) {
+            launchList.clear();
+        }
     }
 
     public LaunchAdapter getLaunchAdapter() {
