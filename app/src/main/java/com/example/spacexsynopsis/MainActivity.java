@@ -50,59 +50,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
             ft.commit();
         }
 
-
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        mainOverviewFragment = new MainOverviewFragment();
-//        ft.replace(R.id.mainOverviewFragment, mainOverviewFragment, "main_overview_fragment");
-//
-//        ft.addToBackStack("add");
-//        ft.commit();
-
-        //TODO: fix loader
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-
-        String url = "https://api.spacexdata.com/v3/launches/past";
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        //Read Reverse order for Past Items
-                        for(int i = response.length()-1; i>=0; i--) {
-                            Launch launch = new Launch("Leeg", "Datumleeg");
-                            try {
-                                JSONObject launchObject = response.getJSONObject(i);
-                                launch = new Launch(
-                                        launchObject.getString("mission_name"),
-                                            launchObject.getString("launch_date_utc")
-                                            .substring(0, 19)
-                                            .replace("T", " ")
-                                            + " UTC");
-                                downloadImage(launch, launchObject.getJSONObject("links").getString("mission_patch_small"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            mainOverviewFragment.addToList(launch);
-                        }
-                        mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
-
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-
-                    }
-                });
-
-        // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
-
-        progressDialog.dismiss();
+        retrieveLaunches();
 
     }
 
@@ -139,6 +87,55 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         }else {
             ft.replace(R.id.launchDetailFragment, fragment, "launch_detail_fragment").commit();
         }
+    }
+
+    public void retrieveLaunches(){
+        //TODO: fix loader
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+        String url = "https://api.spacexdata.com/v3/launches/past";
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Read Reverse order for Past Items
+                        for(int i = response.length()-1; i>=0; i--) {
+                            Launch launch = new Launch("Leeg", "Datumleeg");
+                            try {
+                                JSONObject launchObject = response.getJSONObject(i);
+                                String missionName = launchObject.getString("mission_name");
+                                String launchDateUTC = launchObject.getString("launch_date_utc")
+                                        .substring(0, 19)
+                                        .replace("T", " ")
+                                        + " UTC";
+
+                                launch = new Launch(missionName, launchDateUTC);
+                                downloadImage(launch, launchObject.getJSONObject("links").getString("mission_patch_small"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            mainOverviewFragment.addToList(launch);
+                        }
+                        mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
+
+        progressDialog.dismiss();
     }
 
     @Override
