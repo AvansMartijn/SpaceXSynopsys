@@ -14,22 +14,26 @@ import android.widget.TextView;
 
 public class LaunchDetailFragment extends Fragment {
     private static final String NAME = "name";
+    private static final String DATE = "date";
 
     private String mName;
+    private String mDate;
 
     private OnFragmentInteractionListener mListener;
 
     private TextView textView;
+    private TextView textViewDate;
 
     public LaunchDetailFragment() {
         // Required empty public constructor
     }
 
 
-    public static LaunchDetailFragment newInstance(String name) {
+    public static LaunchDetailFragment newInstance(String name, String date) {
         LaunchDetailFragment fragment = new LaunchDetailFragment();
         Bundle args = new Bundle();
         args.putString(NAME, name);
+        args.putString(DATE, date);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,6 +43,7 @@ public class LaunchDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mName = getArguments().getString(NAME);
+            mDate = getArguments().getString(DATE);
         }
     }
 
@@ -47,7 +52,9 @@ public class LaunchDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.launch_detail_fragment, container, false);
         textView = view.findViewById(R.id.textView);
+        textViewDate = view.findViewById(R.id.launch_detail_date);
         textView.setText(mName);
+        textViewDate.setText(mDate);
 
         return view;
     }
@@ -78,4 +85,5 @@ public class LaunchDetailFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
 }

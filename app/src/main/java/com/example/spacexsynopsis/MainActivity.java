@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener {
     private MainOverviewFragment mainOverviewFragment;
+    private LaunchDetailFragment launchDetailFragment;
 //    private ArrayList<Launch> upcomingLaunches;
 //    private ArrayList<Launch> pastLaunches;
 //    private ArrayList<Launch> favoriteLaunches;
@@ -32,12 +33,30 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        mainOverviewFragment = new MainOverviewFragment();
-        ft.replace(R.id.mainOverviewFragment, mainOverviewFragment, "main_overview_fragment");
+        //orientation portrait
+        if(findViewById(R.id.activtiy_main_portrait) != null){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            mainOverviewFragment = new MainOverviewFragment();
+            ft.replace(R.id.mainOverviewFragment, mainOverviewFragment, "main_overview_fragment");
+            ft.commit();
+        }
 
-        ft.addToBackStack("add");
-        ft.commit();
+        if(findViewById(R.id.activity_main_landscape) != null){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            mainOverviewFragment = new MainOverviewFragment();
+            launchDetailFragment = new LaunchDetailFragment();
+            ft.replace(R.id.mainOverviewFragment, mainOverviewFragment, "main_overview_fragment");
+            ft.replace(R.id.launchDetailFragment, launchDetailFragment, "launch_detail_fragment");
+            ft.commit();
+        }
+
+
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        mainOverviewFragment = new MainOverviewFragment();
+//        ft.replace(R.id.mainOverviewFragment, mainOverviewFragment, "main_overview_fragment");
+//
+//        ft.addToBackStack("add");
+//        ft.commit();
 
         //TODO: fix loader
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -110,12 +129,16 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     @Override
     public void onItemSelected(Launch launch) {
-        LaunchDetailFragment fragment = LaunchDetailFragment.newInstance(launch.name);
+        LaunchDetailFragment fragment = LaunchDetailFragment.newInstance(launch.name, launch.date);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
         ft.addToBackStack(null);
-        ft.replace(R.id.mainOverviewFragment, fragment, "blank_fragment").commit();
+        if(findViewById(R.id.activtiy_main_portrait) != null){
+            ft.replace(R.id.mainOverviewFragment, fragment, "launch_detail_fragment").commit();
+        }else {
+            ft.replace(R.id.launchDetailFragment, fragment, "launch_detail_fragment").commit();
+        }
     }
 
     @Override

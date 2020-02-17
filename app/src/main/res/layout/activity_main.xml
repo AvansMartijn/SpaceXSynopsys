@@ -2,10 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/activtiy_main_portrait">
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/mainOverviewFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+<!--    </FrameLayout>-->
 
     <FrameLayout
         android:id="@+id/mainOverviewFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/launchDetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>

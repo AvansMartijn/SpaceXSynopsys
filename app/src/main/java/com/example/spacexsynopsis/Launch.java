@@ -6,6 +6,7 @@ public class Launch {
     public String name;
     public String date;
     public Bitmap missionPatch;
+    public String missionType;
 
     public Launch(String name, String date) {
         this.name = name;
