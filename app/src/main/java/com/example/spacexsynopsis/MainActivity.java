@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -116,7 +117,9 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
                 break;
             case R.id.nav_settings:
-
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
