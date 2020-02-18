@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         LaunchDetailFragment fragment = LaunchDetailFragment.newInstance(launch.name, launch.date);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
-        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
         ft.addToBackStack(null);
         if(findViewById(R.id.activtiy_main_portrait) != null){
             ft.replace(R.id.mainOverviewFragment, fragment, "launch_detail_fragment").commit();
