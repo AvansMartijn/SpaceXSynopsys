@@ -45,6 +45,9 @@ public class SettingsFragment extends Fragment {
         imageView.setImageURI(uri);
     }
 
+    public void setEditTextName(String string){
+        editTextName.setText(string);
+    }
 
     // TODO: Rename and change types and number of parameters
     public static SettingsFragment newInstance(String name) {
