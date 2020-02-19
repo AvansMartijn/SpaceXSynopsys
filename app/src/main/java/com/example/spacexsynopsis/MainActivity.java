@@ -32,12 +32,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
     private MainOverviewFragment mainOverviewFragment;
     private LaunchDetailFragment launchDetailFragment;
     private ProgressBar progressBar;
     private DrawerLayout drawer;
     private String mLaunchType;
+
+    public static final String FILE_NAME = "pref_string.txt";
+
 
 
 
@@ -89,8 +98,14 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
         retrieveLaunches(mLaunchType);
 
+        setTitle(loadPreferences());
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setTitle(loadPreferences());
     }
 
     @Override
@@ -235,6 +250,40 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public String loadPreferences() {
+        FileInputStream fis = null;
+        String prefString = "Set your own name!";
+        try {
+            fis = openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String text;
+
+            while ((text = br.readLine()) != null) {
+                sb.append(text).append("\n");
+            }
+
+            prefString = sb.toString();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        return prefString;
     }
 
 }
