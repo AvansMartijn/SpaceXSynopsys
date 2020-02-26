@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -175,6 +176,16 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
             ft.replace(R.id.launchDetailFragment, fragment, "launch_detail_fragment").commit();
         }
     }
+
+    @Override
+    public void onItemLongSelected(Launch launch) {
+//        String escapedQuery = URLEncoder.encode(query, "UTF-8");
+        Uri uri = Uri.parse("http://www.google.com/#q=" + launch.name);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+    }
+
+ 
 
     public void retrieveLaunches(String launch){
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +34,8 @@ public class MainOverviewFragment extends Fragment {
 
     public interface OnItemSelectListener {
         void onItemSelected(Launch launch);
+
+        void onItemLongSelected(Launch launch);
     }
 
     @Nullable
@@ -56,6 +59,17 @@ public class MainOverviewFragment extends Fragment {
             }
         };
 
+        View.OnLongClickListener mLongClick = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View view) {
+                int itemPosition = recyclerView.getChildLayoutPosition(view);
+                Launch launch = launchAdapter.getItem(itemPosition);
+                onItemSelectListener.onItemLongSelected(launch);
+                return true;
+            }
+        };
+
+        launchAdapter.setOnItemLongClickListener(mLongClick);
         launchAdapter.setOnItemClickListener(mMessageClickedHandler);
 
         recyclerView.setAdapter(launchAdapter);
