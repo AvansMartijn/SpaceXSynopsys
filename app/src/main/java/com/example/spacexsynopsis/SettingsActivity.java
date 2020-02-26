@@ -137,4 +137,11 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         savePreferences(input.toString());
         setTitle(input.toString());
     }
+
+    @Override
+    public void onImageButtonClicked() {
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
+    }
 }

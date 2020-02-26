@@ -26,7 +26,7 @@ import android.widget.TextView;
 public class SettingsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String IMAGE = "imgparam";
+//    private static final String IMAGE = "imgparam";
     private static final String NAME = "nameparam";
 
 
@@ -73,6 +73,7 @@ public class SettingsFragment extends Fragment {
         editTextName = view.findViewById(R.id.name_setting);
         editTextName.setText(mName);
         Button saveButton = view.findViewById(R.id.button_save);
+        Button pickImageButton = view.findViewById(R.id.button_image_pick);
 
         saveButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -81,6 +82,17 @@ public class SettingsFragment extends Fragment {
                 mListener.onInputSend(input);
             }
         });
+
+        pickImageButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+               mListener.onImageButtonClicked();
+            }
+        });
+
+
+
+
 
         // Inflate the layout for this fragment
         return view;
@@ -117,5 +129,7 @@ public class SettingsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onInputSend(CharSequence input);
+
+        void onImageButtonClicked();
     }
 }
