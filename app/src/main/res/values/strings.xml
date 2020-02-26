@@ -4,5 +4,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_launch_selected">No Launch Selected</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="launch_site">Launch Site</string>
+    <string name="rocket_name">Rocket Name</string>
+    <string name="details">Details</string>
     <color name="white">#FFFFFF</color>
 </resources>
