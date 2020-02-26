@@ -15,25 +15,38 @@ import android.widget.TextView;
 public class LaunchDetailFragment extends Fragment {
     private static final String NAME = "name";
     private static final String DATE = "date";
+    private static final String DETAILS = "details";
+    private static final String LAUNCHSITE = "launchsite";
+    private static final String ROCKETNAME = "rocketname";
 
     private String mName;
     private String mDate;
+    private String mLaunchSite;
+    private String mRocketName;
+    private String mDetails;
 
     private OnFragmentInteractionListener mListener;
 
-    private TextView textView;
-    private TextView textViewDate;
+    private TextView tvName;
+    private TextView tvDate;
+    private TextView tvDetails;
+    private TextView tvRocketName;
+    private TextView tvLaunchSite;
 
     public LaunchDetailFragment() {
         // Required empty public constructor
     }
 
 
-    public static LaunchDetailFragment newInstance(String name, String date) {
+    public static LaunchDetailFragment newInstance(Launch launch) {
         LaunchDetailFragment fragment = new LaunchDetailFragment();
         Bundle args = new Bundle();
-        args.putString(NAME, name);
-        args.putString(DATE, date);
+        args.putString(NAME, launch.getName());
+        args.putString(DATE, launch.getDate());
+        args.putString(DETAILS, launch.getLaunchDetails());
+        args.putString(LAUNCHSITE, launch.getLaunchSiteName());
+        args.putString(ROCKETNAME, launch.getRocketName());
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,6 +57,9 @@ public class LaunchDetailFragment extends Fragment {
         if (getArguments() != null) {
             mName = getArguments().getString(NAME);
             mDate = getArguments().getString(DATE);
+            mDetails = getArguments().getString(DETAILS);
+            mLaunchSite = getArguments().getString(LAUNCHSITE);
+            mRocketName = getArguments().getString(ROCKETNAME);
         }
     }
 
@@ -51,10 +67,17 @@ public class LaunchDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.launch_detail_fragment, container, false);
-        textView = view.findViewById(R.id.textView);
-        textViewDate = view.findViewById(R.id.launch_detail_date);
-        textView.setText(mName);
-        textViewDate.setText(mDate);
+        tvName = view.findViewById(R.id.launch_detail_name);
+        tvDate = view.findViewById(R.id.launch_detail_date);
+        tvDetails = view.findViewById(R.id.launch_detail_details);
+        tvRocketName = view.findViewById(R.id.launch_detail_rocket_name);
+        tvLaunchSite = view.findViewById(R.id.launch_detail_launch_site);
+
+        tvName.setText(mName);
+        tvDate.setText(mDate);
+        tvDetails.setText(mDetails);
+        tvRocketName.setText(mRocketName);
+        tvLaunchSite.setText(mLaunchSite);
 
         return view;
     }

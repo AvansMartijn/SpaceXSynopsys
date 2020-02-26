@@ -1,12 +1,14 @@
 package com.example.spacexsynopsis;
 
+import java.util.ArrayList;
+
 public class Payload {
     private String payloadId;
     private String nationality;
     private String manufacturer;
     private String payloadType;
     private String payloadMass;
-    private String[] customers;
+    private ArrayList<String> customers;
 
     public String getPayloadId() {
         return payloadId;
@@ -28,7 +30,7 @@ public class Payload {
         return payloadMass;
     }
 
-    public String[] getCustomers() {
+    public ArrayList<String> getCustomers() {
         return customers;
     }
 
@@ -52,7 +54,7 @@ public class Payload {
         this.payloadMass = payloadMass;
     }
 
-    public void setCustomers(String[] customers) {
+    public void setCustomers(ArrayList<String> customers) {
         this.customers = customers;
     }
 }

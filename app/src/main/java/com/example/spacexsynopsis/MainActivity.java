@@ -22,6 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener {
     private MainOverviewFragment mainOverviewFragment;
     private LaunchDetailFragment launchDetailFragment;
@@ -78,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     @Override
     public void onItemSelected(Launch launch) {
-        LaunchDetailFragment fragment = LaunchDetailFragment.newInstance(launch.name, launch.date);
+        LaunchDetailFragment fragment = LaunchDetailFragment.newInstance(launch);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
@@ -163,6 +165,26 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
 
             JSONArray payloads = rocket.getJSONObject("second_stage").getJSONArray("payloads");
+            for (int p = 0; p < payloads.length(); p++) {
+                JSONObject payloadObject = payloads.getJSONObject(p);
+                Payload payload = new Payload();
+
+                payload.setManufacturer(payloadObject.getString("manufacturer"));
+                payload.setNationality(payloadObject.getString("nationality"));
+                payload.setPayloadId(payloadObject.getString("payload_id"));
+                payload.setPayloadMass(payloadObject.getString("payload_mass_kg"));
+                payload.setPayloadType(payloadObject.getString("payload_type"));
+
+                JSONArray customersArray = payloadObject.getJSONArray("customers");
+                ArrayList<String> customers = new ArrayList<String>();
+
+                for(int c = 0; c < customersArray.length(); c++){
+                    customers.add(customersArray.getString(c));
+                }
+
+                payload.setCustomers(customers);
+
+            }
 
             downloadImage(launch, launchObject.getJSONObject("links").getString("mission_patch_small"));
 
@@ -171,6 +193,6 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         }
 
         return launch;
-    }
+        }
 
 }
