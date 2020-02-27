@@ -194,19 +194,16 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     public void retrieveLaunches(String launch){
 
-        String launchTime =  "";
+        String launchTime = "";
 
+        switch (launch){
+            case "PAST":
+                launchTime = "past";
+                break;
+            default:
+                launchTime = "upcoming";
 
-//        String launchTime = "";
-
-//        switch (launch){
-//            case "PAST":
-//                launchTime = "past";
-//                break;
-//            default:
-//                launchTime = "upcoming";
-//
-//        }
+        }
 
 
         String url = "https://api.spacexdata.com/v3/launches/" + launchTime;
