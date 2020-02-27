@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -140,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     public void downloadImage(final Launch launch, String url)
     {
+        if (!url.equals("null")) {
+
         ImageRequest imageRequest = new ImageRequest(url,
                 new Response.Listener<Bitmap>() {
                     @Override
@@ -156,6 +159,12 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
         // Access the RequestQueue through your singleton class.
         RequestQueueSingleton.getInstance(this).addToRequestQueue(imageRequest);
+        } else {
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.mission_patch_placeholder);
+            launch.setMissionPatch(bm);
+            mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
+        }
+
     }
 
 
@@ -270,27 +279,27 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
             launch.setRocketName(rocket.getString("rocket_name"));
 
 
-            JSONArray payloads = rocket.getJSONObject("second_stage").getJSONArray("payloads");
-            for (int p = 0; p < payloads.length(); p++) {
-                JSONObject payloadObject = payloads.getJSONObject(p);
-                Payload payload = new Payload();
+//            JSONArray payloads = rocket.getJSONObject("second_stage").getJSONArray("payloads");
+//            for (int p = 0; p < payloads.length(); p++) {
+//                JSONObject payloadObject = payloads.getJSONObject(p);
+//                Payload payload = new Payload();
 
-                payload.setManufacturer(payloadObject.getString("manufacturer"));
-                payload.setNationality(payloadObject.getString("nationality"));
-                payload.setPayloadId(payloadObject.getString("payload_id"));
-                payload.setPayloadMass(payloadObject.getString("payload_mass_kg"));
-                payload.setPayloadType(payloadObject.getString("payload_type"));
+//                payload.setManufacturer(payloadObject.getString("manufacturer"));
+//                payload.setNationality(payloadObject.getString("nationality"));
+//                payload.setPayloadId(payloadObject.getString("payload_id"));
+//                payload.setPayloadMass(payloadObject.getString("payload_mass_kg"));
+//                payload.setPayloadType(payloadObject.getString("payload_type"));
+//
+//                JSONArray customersArray = payloadObject.getJSONArray("customers");
+//                ArrayList<String> customers = new ArrayList<String>();
+//
+//                for(int c = 0; c < customersArray.length(); c++){
+//                    customers.add(customersArray.getString(c));
+//                }
+//
+//                payload.setCustomers(customers);
 
-                JSONArray customersArray = payloadObject.getJSONArray("customers");
-                ArrayList<String> customers = new ArrayList<String>();
-
-                for(int c = 0; c < customersArray.length(); c++){
-                    customers.add(customersArray.getString(c));
-                }
-
-                payload.setCustomers(customers);
-
-            }
+//            }
 
             downloadImage(launch, launchObject.getJSONObject("links").getString("mission_patch_small"));
 
