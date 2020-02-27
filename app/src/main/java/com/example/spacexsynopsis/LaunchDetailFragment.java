@@ -24,19 +24,11 @@ public class LaunchDetailFragment extends Fragment {
     private String mLaunchSite;
     private String mRocketName;
     private String mDetails;
-
     private OnFragmentInteractionListener mListener;
-
-    private TextView tvName;
-    private TextView tvDate;
-    private TextView tvDetails;
-    private TextView tvRocketName;
-    private TextView tvLaunchSite;
 
     public LaunchDetailFragment() {
         // Required empty public constructor
     }
-
 
     public static LaunchDetailFragment newInstance(Launch launch) {
         LaunchDetailFragment fragment = new LaunchDetailFragment();
@@ -67,11 +59,11 @@ public class LaunchDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.launch_detail_fragment, container, false);
-        tvName = view.findViewById(R.id.launch_detail_name);
-        tvDate = view.findViewById(R.id.launch_detail_date);
-        tvDetails = view.findViewById(R.id.launch_detail_details);
-        tvRocketName = view.findViewById(R.id.launch_detail_rocket_name);
-        tvLaunchSite = view.findViewById(R.id.launch_detail_launch_site);
+        TextView tvName = view.findViewById(R.id.launch_detail_name);
+        TextView tvDate = view.findViewById(R.id.launch_detail_date);
+        TextView tvDetails = view.findViewById(R.id.launch_detail_details);
+        TextView tvRocketName = view.findViewById(R.id.launch_detail_rocket_name);
+        TextView tvLaunchSite = view.findViewById(R.id.launch_detail_launch_site);
 
         tvName.setText(mName);
         tvDate.setText(mDate);

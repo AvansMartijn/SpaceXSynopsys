@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,19 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainOverviewFragment extends Fragment {
     private OnItemSelectListener onItemSelectListener;
@@ -33,6 +20,7 @@ public class MainOverviewFragment extends Fragment {
     private LaunchAdapter launchAdapter;
 
     public interface OnItemSelectListener {
+
         void onItemSelected(Launch launch);
 
         void onItemLongSelected(Launch launch);
@@ -45,6 +33,7 @@ public class MainOverviewFragment extends Fragment {
 
         final RecyclerView recyclerView = view.findViewById(R.id.main_overview_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //set fixed size for performance
         recyclerView.setHasFixedSize(true);
 
         launchAdapter = new LaunchAdapter(launchList);
@@ -55,7 +44,6 @@ public class MainOverviewFragment extends Fragment {
                 int itemPosition = recyclerView.getChildLayoutPosition(view);
                 Launch launch = launchAdapter.getItem(itemPosition);
                 onItemSelectListener.onItemSelected(launch);
-
             }
         };
 
@@ -71,9 +59,7 @@ public class MainOverviewFragment extends Fragment {
 
         launchAdapter.setOnItemLongClickListener(mLongClick);
         launchAdapter.setOnItemClickListener(mMessageClickedHandler);
-
         recyclerView.setAdapter(launchAdapter);
-
 
         return view;
     }

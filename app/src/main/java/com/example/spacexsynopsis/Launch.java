@@ -5,18 +5,12 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 
 public class Launch {
-    public String name;
-    public String date;
-    public Bitmap missionPatch;
+    private String name;
+    private String date;
+    private Bitmap missionPatch;
     private String rocketName;
-    private ArrayList<Payload> payloads;
     private String launchSiteName;
     private String launchDetails;
-
-    public Launch(String name, String date) {
-        this.name = name;
-        this.date = date;
-    }
 
     public Launch() {
 
@@ -38,10 +32,6 @@ public class Launch {
         this.missionPatch = missionPatch;
     }
 
-    public void setPayloads(ArrayList<Payload> payloads) {
-        this.payloads = payloads;
-    }
-
     public void setLaunchSiteName(String launchSiteName) {
         this.launchSiteName = launchSiteName;
     }
@@ -54,16 +44,8 @@ public class Launch {
         return date;
     }
 
-    public Bitmap getMissionPatch() {
-        return missionPatch;
-    }
-
     public String getRocketName() {
         return rocketName;
-    }
-
-    public ArrayList<Payload> getPayloads() {
-        return payloads;
     }
 
     public String getLaunchSiteName() {
@@ -76,5 +58,9 @@ public class Launch {
 
     public void setLaunchDetails(String launchDetails) {
         this.launchDetails = launchDetails;
+    }
+
+    public Bitmap getMissionPatch() {
+        return missionPatch;
     }
 }

@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -29,9 +30,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-import java.util.ArrayList;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,15 +39,12 @@ import java.io.InputStreamReader;
 public class MainActivity extends AppCompatActivity implements MainOverviewFragment.OnItemSelectListener, LaunchDetailFragment.OnFragmentInteractionListener, NavigationView.OnNavigationItemSelectedListener {
 
     private MainOverviewFragment mainOverviewFragment;
-    private LaunchDetailFragment launchDetailFragment;
+
     private ProgressBar progressBar;
     private DrawerLayout drawer;
     private String mLaunchType;
 
     public static final String FILE_NAME = "pref_string.txt";
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,19 +56,14 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         drawer = findViewById(R.id.activity_drawer);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-
-
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
-
-
+        progressBar = findViewById(R.id.progressBar);
         mainOverviewFragment = new MainOverviewFragment();
+
 
         //orientation portrait
         if(findViewById(R.id.activtiy_main_portrait) != null){
@@ -81,36 +71,37 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
             ft.replace(R.id.mainOverviewFragment, mainOverviewFragment, "main_overview_fragment");
             ft.commit();
         }
-
+        //orientation landscape
         if(findViewById(R.id.activity_main_landscape) != null){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            launchDetailFragment = new LaunchDetailFragment();
+            LaunchDetailFragment launchDetailFragment = new LaunchDetailFragment();
             ft.replace(R.id.mainOverviewFragment, mainOverviewFragment, "main_overview_fragment");
             ft.replace(R.id.launchDetailFragment, launchDetailFragment, "launch_detail_fragment");
             ft.commit();
         }
 
+        //set default selected item
         navigationView.setCheckedItem(R.id.nav_upcoming);
+        mLaunchType = "upcoming";
         if(savedInstanceState != null){
             mLaunchType = savedInstanceState.getString("launchType");
-        }else{
-            mLaunchType = "UPCOMING";
         }
 
         retrieveLaunches(mLaunchType);
-
+        //set app title from saved preference
         setTitle(loadPreferences());
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        //reset the title in case it has been modified
         setTitle(loadPreferences());
     }
 
     @Override
     public void onBackPressed() {
+        //close nav drawer if open before starting previous backstack item
         if(drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
         }else{
@@ -122,11 +113,11 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.nav_upcoming:
-                mLaunchType = "UPCOMING";
+                mLaunchType = "upcoming";
                 retrieveLaunches(mLaunchType);
                 break;
             case R.id.nav_past:
-                mLaunchType = "PAST";
+                mLaunchType = "past";
                 retrieveLaunches(mLaunchType);
                 break;
             case R.id.nav_settings:
@@ -142,24 +133,26 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
     public void downloadImage(final Launch launch, String url)
     {
         if (!url.equals("null")) {
-
+        //create image request and add image bitmap to respective launch
         ImageRequest imageRequest = new ImageRequest(url,
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap bitmap) {
                         launch.setMissionPatch(bitmap);
+                        //refresh/notify view
                         mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
                     }
                 }, 0, 0, null, Bitmap.Config.RGB_565, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(MainActivity.this, "Could not retrieve mission patch", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Access the RequestQueue through your singleton class.
         RequestQueueSingleton.getInstance(this).addToRequestQueue(imageRequest);
         } else {
+            //set placeholder mission patch in case no patch is present
             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.mission_patch_placeholder);
             launch.setMissionPatch(bm);
             mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
@@ -167,9 +160,9 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     }
 
-
     @Override
     public void onItemSelected(Launch launch) {
+        //create fragment for launch detail
         LaunchDetailFragment fragment = LaunchDetailFragment.newInstance(launch);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -182,35 +175,16 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         }
     }
 
-
     @Override
     public void onItemLongSelected(Launch launch) {
-//        String escapedQuery = URLEncoder.encode(query, "UTF-8");
-        Uri uri = Uri.parse("http://www.google.com/#q=" + launch.name);
+        Uri uri = Uri.parse("http://www.google.com/#q=" + launch.getName());
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
 
- 
-
     public void retrieveLaunches(String launch){
-
-        String launchTime = "";
-
-        switch (launch){
-            case "PAST":
-                launchTime = "past";
-                break;
-            default:
-                launchTime = "upcoming";
-
-        }
-
-
-        String url = "https://api.spacexdata.com/v3/launches/" + launchTime;
-
+        String url = "https://api.spacexdata.com/v3/launches/" + launch;
         mainOverviewFragment.clearLaunchList();
-
         progressBar.setVisibility(View.VISIBLE);
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
@@ -221,15 +195,12 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                         //Read Reverse order for Past Items
                         for(int i = 0; i< response.length(); i++) {
                             Launch launch = parseLaunch(response, i);
-
                             mainOverviewFragment.addToLaunchList(launch);
                         }
                         mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
                         progressBar.setVisibility(View.GONE);
-
                     }
                 }, new Response.ErrorListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: Handle error
@@ -256,9 +227,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-
     }
-
 
     private Launch parseLaunch(JSONArray response, int i) {
 
@@ -278,35 +247,11 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
             JSONObject rocket = launchObject.getJSONObject("rocket");
             launch.setRocketName(rocket.getString("rocket_name"));
 
-
-//            JSONArray payloads = rocket.getJSONObject("second_stage").getJSONArray("payloads");
-//            for (int p = 0; p < payloads.length(); p++) {
-//                JSONObject payloadObject = payloads.getJSONObject(p);
-//                Payload payload = new Payload();
-
-//                payload.setManufacturer(payloadObject.getString("manufacturer"));
-//                payload.setNationality(payloadObject.getString("nationality"));
-//                payload.setPayloadId(payloadObject.getString("payload_id"));
-//                payload.setPayloadMass(payloadObject.getString("payload_mass_kg"));
-//                payload.setPayloadType(payloadObject.getString("payload_type"));
-//
-//                JSONArray customersArray = payloadObject.getJSONArray("customers");
-//                ArrayList<String> customers = new ArrayList<String>();
-//
-//                for(int c = 0; c < customersArray.length(); c++){
-//                    customers.add(customersArray.getString(c));
-//                }
-//
-//                payload.setCustomers(customers);
-
-//            }
-
             downloadImage(launch, launchObject.getJSONObject("links").getString("mission_patch_small"));
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return launch;
         }
 
@@ -338,11 +283,8 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                     e.printStackTrace();
                 }
             }
-
         }
-
         return prefString;
     }
-
 
 }

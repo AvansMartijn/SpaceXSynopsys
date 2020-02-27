@@ -13,9 +13,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -37,25 +35,25 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        //load preferences for internal storage
         String prefString = loadPreferences();
+        //load preferences for external storage
         String exPrefString = loadExternalPreferences();
+        //pass settings to new fragment instance
         settingsFragment = SettingsFragment.newInstance(prefString, exPrefString);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.replace(R.id.settings_fragment, settingsFragment, "settings_fragment").commit();
 
         setTitle(prefString);
-
-
-
-
-
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        //check if intent result is not null (user cancelled intent)
         if(imageReturnedIntent != null){
             Uri selectedImage = imageReturnedIntent.getData();
             settingsFragment.setImage(selectedImage);
@@ -63,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
     }
 
     public void saveExternalPreferences(String string){
-        //do external write
+        //do external storage write
         if(isExternalStorageWritable() && checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
             File textFile = new File(getExternalFilesDir(null), "external_save.txt");
             try{
@@ -76,11 +74,9 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         }else{
             Toast.makeText(this, "Can not save external preference", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public String loadExternalPreferences(){
-
         if(isExternalStorageWritable() && checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE)){
             StringBuilder sb = new StringBuilder();
             try{
@@ -162,7 +158,6 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
             while ((text = br.readLine()) != null) {
                 sb.append(text).append("\n");
             }
-
             prefString = sb.toString();
 
         } catch (FileNotFoundException e) {
@@ -177,9 +172,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
                     e.printStackTrace();
                 }
             }
-
         }
-
         return prefString;
     }
 
