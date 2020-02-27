@@ -207,6 +207,7 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
         savePreferences(input.toString());
         saveExternalPreferences(input2.toString());
         setTitle(input.toString());
+        Toast.makeText(this, "Preferences saved", Toast.LENGTH_SHORT).show();
     }
 
     @Override
