@@ -13,6 +13,7 @@ import java.util.List;
 public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.LaunchViewHolder>{
     private List<Launch> launches;
     private View.OnClickListener onItemClickListener;
+    private View.OnLongClickListener onItemLongClickListener;
 
     public LaunchAdapter(List<Launch> list) {
         launches = list;
@@ -26,6 +27,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.LaunchView
 
         LaunchViewHolder launchViewHolder = new LaunchViewHolder(view);
         launchViewHolder.itemView.setOnClickListener(onItemClickListener);
+        launchViewHolder.itemView.setOnLongClickListener(onItemLongClickListener);
 
         return launchViewHolder;
     }
@@ -52,6 +54,10 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchAdapter.LaunchView
 
     public void setOnItemClickListener(View.OnClickListener onClickListener) {
         onItemClickListener = onClickListener;
+    }
+
+    public void setOnItemLongClickListener(View.OnLongClickListener onLongClickListener){
+        onItemLongClickListener = onLongClickListener;
     }
 
     class LaunchViewHolder extends RecyclerView.ViewHolder

@@ -10,4 +10,6 @@
     <string name="rocket_name">Rocket Name</string>
     <string name="details">Details</string>
     <color name="white">#FFFFFF</color>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
 </resources>
