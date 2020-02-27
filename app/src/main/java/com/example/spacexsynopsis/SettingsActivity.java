@@ -56,9 +56,10 @@ public class SettingsActivity extends AppCompatActivity implements SettingsFragm
 
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        Uri selectedImage = imageReturnedIntent.getData();
-        settingsFragment.setImage(selectedImage);
-
+        if(imageReturnedIntent != null){
+            Uri selectedImage = imageReturnedIntent.getData();
+            settingsFragment.setImage(selectedImage);
+        }
     }
 
     public void saveExternalPreferences(String string){
