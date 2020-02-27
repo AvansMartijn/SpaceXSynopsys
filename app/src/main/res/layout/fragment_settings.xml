@@ -10,7 +10,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <EditText
-        android:id="@+id/name_setting"
+        android:id="@+id/edittext_external_storage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -22,6 +22,24 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:hint="External storage savestring"
+        android:autofillHints="@string/app_name"/>
+
+
+
+    <EditText
+        android:id="@+id/name_setting"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edittext_external_storage"
         android:hint="Your own app title"
         android:autofillHints="@string/app_name"/>
 

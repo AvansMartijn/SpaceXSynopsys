@@ -28,13 +28,16 @@ public class SettingsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String IMAGE = "imgparam";
     private static final String NAME = "nameparam";
+    private static final String EXTERNAL_SAVE_STRING = "exsaveparam";
 
 
 
     // TODO: Rename and change types of parameters
     private String mName;
+    private String mExSaveString;
     private OnFragmentInteractionListener mListener;
     private EditText editTextName;
+    private EditText editTextExSaveString;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -45,15 +48,13 @@ public class SettingsFragment extends Fragment {
         imageView.setImageURI(uri);
     }
 
-    public void setEditTextName(String string){
-        editTextName.setText(string);
-    }
 
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance(String name) {
+    public static SettingsFragment newInstance(String name, String exSaveString) {
         SettingsFragment fragment = new SettingsFragment();
         Bundle args = new Bundle();
         args.putString(NAME, name);
+        args.putString(EXTERNAL_SAVE_STRING, exSaveString);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,6 +64,7 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mName = getArguments().getString(NAME);
+            mExSaveString = getArguments().getString(EXTERNAL_SAVE_STRING);
         }
     }
 
@@ -72,6 +74,8 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         editTextName = view.findViewById(R.id.name_setting);
         editTextName.setText(mName);
+        editTextExSaveString = view.findViewById(R.id.edittext_external_storage);
+        editTextExSaveString.setText(mExSaveString);
         Button saveButton = view.findViewById(R.id.button_save);
         Button pickImageButton = view.findViewById(R.id.button_image_pick);
 
@@ -79,7 +83,8 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 CharSequence input =  editTextName.getText();
-                mListener.onInputSend(input);
+                CharSequence input2 = editTextExSaveString.getText();
+                mListener.onInputSend(input, input2);
             }
         });
 
@@ -128,7 +133,7 @@ public class SettingsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onInputSend(CharSequence input);
+        void onInputSend(CharSequence input, CharSequence input2);
 
         void onImageButtonClicked();
     }
