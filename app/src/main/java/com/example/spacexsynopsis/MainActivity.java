@@ -133,9 +133,6 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                 mLaunchType = "PAST";
                 retrieveLaunches(mLaunchType);
                 break;
-            case R.id.nav_fav:
-
-                break;
             case R.id.nav_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);

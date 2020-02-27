@@ -7,9 +7,6 @@
         <item android:id="@+id/nav_past"
             android:icon="@drawable/ic_past"
             android:title="Past launches"/>
-        <item android:id="@+id/nav_fav"
-            android:icon="@drawable/ic_fav"
-            android:title="Favorites"/>
 
     </group>
 
