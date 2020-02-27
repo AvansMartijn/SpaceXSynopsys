@@ -1,7 +1,6 @@
 package com.example.spacexsynopsis;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -10,17 +9,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -160,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         });
 
         // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(imageRequest);
+        RequestQueueSingleton.getInstance(this).addToRequestQueue(imageRequest);
     }
 
 
@@ -234,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                 });
 
         // Access the RequestQueue through your singleton class.
-        MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
+        RequestQueueSingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
 
     }
 
