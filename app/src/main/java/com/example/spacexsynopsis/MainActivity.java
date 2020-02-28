@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                retrieveLaunches(mLaunchType);
-                pullToRefresh.setRefreshing(false);
+                pullToRefresh.setRefreshing(true);
+                refreshLaunches(mLaunchType, pullToRefresh);
             }
         });
     }
@@ -221,6 +221,37 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         // Access the RequestQueue through your singleton class.
         RequestQueueSingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
 
+    }
+
+    public void refreshLaunches(String launch, final SwipeRefreshLayout swipeRefreshLayout) {
+        String url = "https://api.spacexdata.com/v3/launches/" + launch;
+        mainOverviewFragment.clearLaunchList();
+//        progressBar.setVisibility(View.VISIBLE);
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        //Read Reverse order for Past Items
+                        for(int i = 0; i< response.length(); i++) {
+                            Launch launch = parseLaunch(response, i);
+                            mainOverviewFragment.addToLaunchList(launch);
+                        }
+                        mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
+//                        progressBar.setVisibility(View.GONE);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        RequestQueueSingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
     }
 
     @Override
