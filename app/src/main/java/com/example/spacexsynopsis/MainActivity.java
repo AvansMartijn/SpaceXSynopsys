@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -90,6 +91,15 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         retrieveLaunches(mLaunchType);
         //set app title from saved preference
         setTitle(loadPreferences());
+
+        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                retrieveLaunches(mLaunchType);
+                pullToRefresh.setRefreshing(false);
+            }
+        });
     }
 
     @Override
