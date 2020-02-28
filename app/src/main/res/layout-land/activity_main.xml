@@ -13,12 +13,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/activity_main_landscape"
-        android:background="@drawable/big">
+        android:background="@drawable/backgound_space_secondary">
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorFullTransparent"
             android:id="@+id/toolbar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
