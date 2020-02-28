@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     private DrawerLayout drawer;
     private String mLaunchType;
+    private SwipeRefreshLayout pullToRefresh;
 
     public static final String FILE_NAME = "pref_string.txt";
 
@@ -86,15 +87,16 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
             mLaunchType = savedInstanceState.getString("launchType");
         }
 
+        pullToRefresh = findViewById(R.id.pullToRefresh);
         retrieveLaunches(mLaunchType, true);
         //set app title from saved preference
         setTitle(loadPreferences());
 
-        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                pullToRefresh.setRefreshing(true);
+
                 retrieveLaunches(mLaunchType, false);
             }
         });
@@ -191,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
     }
 
     public void retrieveLaunches(String launch, boolean firstrun){
+        pullToRefresh.setRefreshing(true);
         String url = "https://api.spacexdata.com/v3/launches/" + launch;
         if(!firstrun) {
             mainOverviewFragment.getLaunchAdapter().notifyItemRangeRemoved(0, mainOverviewFragment.getLaunchListLength());
@@ -210,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                         }
                         mainOverviewFragment.getLaunchAdapter().notifyItemRangeInserted(0, mainOverviewFragment.getLaunchListLength());
 //                        mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
-                        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+
                         pullToRefresh.setRefreshing(false);
                     }
                 }, new Response.ErrorListener() {
