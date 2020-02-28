@@ -258,7 +258,12 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                     + " UTC");
 
             launch.setLaunchSiteName(launchObject.getJSONObject("launch_site").getString("site_name_long"));
-            launch.setLaunchDetails(launchObject.getString("details"));
+
+            if(launchObject.getString("details").equals("null")) {
+                launch.setLaunchDetails("No details available");
+            } else {
+                launch.setLaunchDetails(launchObject.getString("details"));
+            }
 
             JSONObject rocket = launchObject.getJSONObject("rocket");
             launch.setRocketName(rocket.getString("rocket_name"));
