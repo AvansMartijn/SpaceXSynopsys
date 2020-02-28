@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
     private MainOverviewFragment mainOverviewFragment;
 
-    private ProgressBar progressBar;
     private DrawerLayout drawer;
     private String mLaunchType;
 
@@ -62,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
 
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        progressBar = findViewById(R.id.progressBar);
         mainOverviewFragment = new MainOverviewFragment();
 
 
@@ -88,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
             mLaunchType = savedInstanceState.getString("launchType");
         }
 
-        retrieveLaunches(mLaunchType);
+        retrieveLaunches(mLaunchType, true);
         //set app title from saved preference
         setTitle(loadPreferences());
 
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
             @Override
             public void onRefresh() {
                 pullToRefresh.setRefreshing(true);
-                refreshLaunches(mLaunchType, pullToRefresh);
+                retrieveLaunches(mLaunchType, false);
             }
         });
     }
@@ -124,11 +122,11 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         switch (item.getItemId()){
             case R.id.nav_upcoming:
                 mLaunchType = "upcoming";
-                retrieveLaunches(mLaunchType);
+                retrieveLaunches(mLaunchType, false);
                 break;
             case R.id.nav_past:
                 mLaunchType = "past";
-                retrieveLaunches(mLaunchType);
+                retrieveLaunches(mLaunchType, false);
                 break;
             case R.id.nav_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -192,10 +190,13 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         startActivity(intent);
     }
 
-    public void retrieveLaunches(String launch){
+    public void retrieveLaunches(String launch, boolean firstrun){
         String url = "https://api.spacexdata.com/v3/launches/" + launch;
+        if(!firstrun) {
+            mainOverviewFragment.getLaunchAdapter().notifyItemRangeRemoved(0, mainOverviewFragment.getLaunchListLength());
+        }
+
         mainOverviewFragment.clearLaunchList();
-        progressBar.setVisibility(View.VISIBLE);
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -207,8 +208,10 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
                             Launch launch = parseLaunch(response, i);
                             mainOverviewFragment.addToLaunchList(launch);
                         }
-                        mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
-                        progressBar.setVisibility(View.GONE);
+                        mainOverviewFragment.getLaunchAdapter().notifyItemRangeInserted(0, mainOverviewFragment.getLaunchListLength());
+//                        mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
+                        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+                        pullToRefresh.setRefreshing(false);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -221,37 +224,6 @@ public class MainActivity extends AppCompatActivity implements MainOverviewFragm
         // Access the RequestQueue through your singleton class.
         RequestQueueSingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
 
-    }
-
-    public void refreshLaunches(String launch, final SwipeRefreshLayout swipeRefreshLayout) {
-        String url = "https://api.spacexdata.com/v3/launches/" + launch;
-        mainOverviewFragment.clearLaunchList();
-//        progressBar.setVisibility(View.VISIBLE);
-
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        //Read Reverse order for Past Items
-                        for(int i = 0; i< response.length(); i++) {
-                            Launch launch = parseLaunch(response, i);
-                            mainOverviewFragment.addToLaunchList(launch);
-                        }
-                        mainOverviewFragment.getLaunchAdapter().notifyDataSetChanged();
-//                        progressBar.setVisibility(View.GONE);
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-
-                    }
-                });
-
-        // Access the RequestQueue through your singleton class.
-        RequestQueueSingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
     }
 
     @Override

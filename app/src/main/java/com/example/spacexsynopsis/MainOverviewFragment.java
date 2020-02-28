@@ -84,6 +84,10 @@ public class MainOverviewFragment extends Fragment {
         launchList.add(launch);
     }
 
+    public int getLaunchListLength() {
+        return launchList.size();
+    }
+
     public void clearLaunchList() {
         if(launchList != null) {
             launchList.clear();
